@@ -93,7 +93,7 @@ print("S: ",sVar)
 uVar = LpVariable.matrix("U", indicesS, cat = "Continuous", lowBound= 0 )
 print("U: ",uVar)
 #Funcao Objetivo
-
+objFunc = lpSum(iVar[a][t] for a in range(nComponente) for t in range(nMes))
 #Modelo
 
 #Restrições

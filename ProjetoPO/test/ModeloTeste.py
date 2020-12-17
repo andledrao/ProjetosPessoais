@@ -10,3 +10,10 @@ custoArmazem = np.array([
     [3,2]
 ])
 
+#Indices Variaveis
+indiceVariaveis = [str(i)+str(j) for j in range(1, nArmazem+1) for i in range(1, nProducao+1)]
+indiceVariaveis.sort()
+
+#Variaveis de Decisao
+DV_variables = LpVariable.matrix("X", indiceVariaveis, cat = "Integer", lowBound= 0 )
+print(DV_variables)

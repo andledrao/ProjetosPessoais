@@ -11,21 +11,37 @@ nRota = 4
 
     #C do artigo
 custoTransporte = np.array([
-    [np.inf,1,2],
-    [0.25,np.inf,4],
-    [1,2,np.inf]
+    [np.inf,np.inf,np.inf,np.inf],
+    [np.inf,np.inf,np.inf,np.inf],
+    [1,1,1,1],
+    [1,1,1,1],
+    [1,1,1,1],
+    [1,1,1,1],
+    [1,1,1,1],
+    [1,1,1,1],
+    [np.inf,np.inf,np.inf,np.inf],
+    [np.inf,np.inf,np.inf,np.inf],
+    [1,1,1,1],
+    [1,1,1,1],
+    [1,1,1,1],
+    [1,1,1,1],
+    [1,1,1,1],
+    [1,1,1,1],
+    [np.inf,np.inf,np.inf,np.inf],
+    [np.inf,np.inf,np.inf,np.inf],
 ])
 
     #Ç do artigo
 
 tempoSetup = np.array([
-    [np.inf,1,1],
-    [1,np.inf,1],
-    [1,1,np.inf]
+    [np.inf,np.inf,np.inf],
+    [1,1,1],
+    [1,1,1],
+    [np.inf,np.inf,np.inf]
 ])
 
     #hINDICE do artigo (hA,hB etc)
-custoArmazenamento = np.array([1,1,1])
+custoArmazenamento = np.array([1,2]).reshape(-1,1)
     
     #rho do artigo
 tempoProcessamento = np.array([1,1,1])
@@ -47,7 +63,7 @@ modelo = LpProblem("Modelao-Da-Massa",LpMinimize)
 #Indices Variaveis
 indicesX = [str(A)+str(t) for A in range(1, nComponente+1) for t in range(1, nMes+1)]
 # print("indices de X: ",indicesX)
-indicesI = [str(A)+str(t) for A in range(1, nComponente+1) for t in range(1, nMes+1)]
+indicesI = np.array([str(A)+str(t) for A in range(1, nComponente+1) for t in range(1, nMes+1)])
 # print("indices de I: ",indicesI)
 indicesY = [str(A)+str(t) for A in range(1, nComponente+1) for t in range(1, nMes+1)]
 # print("indices de Y: ",indicesY)
@@ -93,7 +109,10 @@ print("S: ",sVar)
 uVar = LpVariable.matrix("U", indicesS, cat = "Continuous", lowBound= 0 )
 print("U: ",uVar)
 #Funcao Objetivo
-objFunc = lpSum(iVar[a][t] for a in range(nComponente) for t in range(nMes))
+objFunc = lpSum(custoArmazenamento*np.array(iVar).reshape(2,3))
+objFunc += lpSum(tempoSetup*np.array(zVar).reshape(4,3))
+objFunc += lpSum(custoTransporte*np.array(wVar).reshape(18,4))
 #Modelo
-
+modelo += objFunc
+print(modelo)
 #Restrições

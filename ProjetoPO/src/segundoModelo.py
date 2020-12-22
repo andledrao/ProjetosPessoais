@@ -168,5 +168,6 @@ for r in range(nRota):
         modelo+=pesoP[p]*lpSum(qVar[p][r][t] for t in range(nMes)) <= list(capacidadeV[v]*aVar[r][v]  for v in range(nVeiculo))
 
 #Restrição 7
-# for r in range(nRota):
+for r in range(nRota):
     # print(lpSum(aVar[r][v]for v in range(nVeiculo)) == lpSum(sVar[0][r][t] for t in range(nMes)))
+    modelo+=lpSum(aVar[r][v]for v in range(nVeiculo)) == lpSum(sVar[0][r][t] for t in range(nMes))

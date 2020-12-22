@@ -101,7 +101,6 @@ piVar = LpVariable.matrix("PI", indicesPI, cat = "Continuous", lowBound= 0 )
 print("PI: ",piVar)
     #Igual a 1 se o arco ij for navegado pela rota R do veículo V, 0 caso contrário
 wVar = LpVariable.matrix("W", indicesW, cat = "Binary", lowBound= 0 )
-wVar = np.array(wVar).reshape(18,4)
 print("W: ",wVar)
     #Quantidade do produto P despachado na rota R pelo veículo V no periodo t
 qVar = LpVariable.matrix("Q", indicesQ, cat = "Integer", lowBound= 0 )
@@ -113,25 +112,3 @@ print("S: ",sVar)
     #Horário de início que o nó I é atendido pela rota R com o veículo V
 uVar = LpVariable.matrix("U", indicesS, cat = "Continuous", lowBound= 0 )
 print("U: ",uVar)
-#Funcao Objetivo
-objFunc = lpSum(custoArmazenamento*iVar)+lpSum(tempoSetup*zVar)+lpSum(custoTransporte*wVar)
-# objFunc += lpSum(tempoSetup*zVar)
-# objFunc += lpSum(custoTransporte*wVar)
-#Modelo
-modelo += objFunc
-# print(modelo)
-#Restrições
-aux = []
-final = []
-for i in qVar:
-    if(len(aux)<4):
-        aux.append([i])
-    elif(len(aux)==4):
-        final.append(aux)
-        aux = []
-final = np.array(final)
-print(final)
-print(qVar.reshape(16,3))
-# for a in range(nComponente):
-#     for t in range(nMes):
-#         iVar[a][t] + xVar[a][t] == lpSum(1*qVar[p][v][r][t] for p in range(nProduto) for v in range(nVeiculo) for r in range(nRota))

@@ -2,12 +2,12 @@ import numpy as np
 from pulp import *
 
 #Dados objetivos
-nNo = 3
+nNo = 4
 nMes = 3
-nComponente = 2
-nProduto = 2
+nComponente = 3
+nProduto = 3
 nVeiculo = 2
-nRota = 4
+nRota = 6
 
     #C do artigo
 custoTransporte = np.array([
@@ -71,30 +71,31 @@ indicesZ = [str(A)+str(b)+str(t) for A in range(1, nComponente+1) for b in range
 # print("indices de Z: ",indicesZ)
 indicesPI = [str(A)+str(t) for A in range(1, nComponente+1) for t in range(1, nMes+1)]
 # print("indices de PI: ",indicesPI)
-indicesW = [str(i)+str(j)+str(v)+str(r) for i in range(1, nNo+1) for j in range(1, nNo+1) for v in range(1, nVeiculo+1) for r in range(1, nRota+1)]
+indicesW = [str(i)+str(j)+str(r) for i in range(1, nNo+1) for j in range(1, nNo+1) for r in range(1, nRota+1)]
 # print("indices de W: ",indicesW)
-indicesQ = [str(p)+str(v)+str(r)+str(t) for p in range(1, nProduto+1) for v in range(1, nVeiculo+1) for r in range(1, nRota+1) for t in range(1, nMes+1)]
+indicesQ = [str(p)+str(r)+str(t) for p in range(1, nProduto+1) for r in range(1, nRota+1) for t in range(1, nMes+1)]
 # print("indices de Q: ",indicesQ)
-indicesS = [str(i)+str(v)+str(r)+str(t) for i in range(1, nNo+1) for v in range(1, nVeiculo+1) for r in range(1, nRota+1) for t in range(1, nMes+1)]
+indicesS = [str(i)+str(r)+str(t) for i in range(1, nNo+1) for r in range(1, nRota+1) for t in range(1, nMes+1)]
 # print("indices de S: ",indicesS)
-indicesU = [str(i)+str(v)+str(r) for i in range(1, nNo+1) for v in range(1, nVeiculo+1) for r in range(1, nRota+1)]
+indicesU = [str(i)+str(r) for i in range(1, nNo+1) for r in range(1, nRota+1)]
 # print("indices de U: ",indicesU)
-
+indicesA = [str(r)+str(v) for r in range(1,nRota+1) for v in range(1,nVeiculo+1)]
+# print("indices de A: ",indicesA)
 #Variaveis de Decisao
     #Quantidade produzida do item A no periodo t
 xVar = LpVariable.matrix("X", indicesX, cat = "Integer", lowBound= 0 )
-xVar = np.array(xVar).reshape(1,6)
+xVar = np.array(xVar)
 print("X: ",xVar)
     #Inventário do item A no final do periodo t
 iVar = LpVariable.matrix("I", indicesI, cat = "Integer", lowBound= 0 )
-iVar = np.array(iVar).reshape(2,3)
+iVar = np.array(iVar)
 print("I: ",iVar)
     #Igual a 1 se a linha tiver o setup do item A no periodo t, 0 caso contrário
 yVar = LpVariable.matrix("Y", indicesY, cat = "Binary", lowBound= 0 )
 print("Y: ",yVar)
     #Igual a 1 se houver troca de setup do item A pro item B no periodo t, 0 caso contrário
 zVar = LpVariable.matrix("Z", indicesZ, cat = "Binary", lowBound= 0 )
-zVar = np.array(zVar).reshape(4,3)
+zVar = np.array(zVar)
 print("Z: ",zVar)
     #Variável auxiliar para sequênciamento
 piVar = LpVariable.matrix("PI", indicesPI, cat = "Continuous", lowBound= 0 )
@@ -112,3 +113,5 @@ print("S: ",sVar)
     #Horário de início que o nó I é atendido pela rota R com o veículo V
 uVar = LpVariable.matrix("U", indicesS, cat = "Continuous", lowBound= 0 )
 print("U: ",uVar)
+aVar = LpVariable.matrix("A", indicesA, cat = "Binary", lowBound= 0 )
+print("A: ",aVar)

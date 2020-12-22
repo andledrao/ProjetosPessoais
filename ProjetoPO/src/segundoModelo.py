@@ -47,10 +47,10 @@ estoqueMin = np.array([1,1,1])
     #K do artigo
 capacidadeProdutiva = np.array([100,100,100])
 
-    #Capacidade em kg do veículo
-tetaV = np.array([100,120])
+    #TetaV do artigo
+capacidadeV = np.array([100,120])
 
-    #Peso do produto
+    #Psi do artigo
 pesoP = np.array([1,2,3])
 
 #Definindo Modelo
@@ -152,17 +152,21 @@ for a in range(nComponente):
 for p in range(nProduto):
     for r in range(nRota):
         for t in range(nMes):
-            # print(qVar[p][r][t] <= np.min(tetaV)*sVar[1][r][t])
-            modelo+=qVar[p][r][t] <= np.min(tetaV)*sVar[1][r][t]
+            # print(qVar[p][r][t] <= np.min(capacidadeV)*sVar[0][r][t])
+            modelo+=qVar[p][r][t] <= np.min(capacidadeV)*sVar[0][r][t]
 
 #Restrição 5
 # for r in range(nRota):
 #     for s in range(nRota):
 #         uVar[1][s]>=uVar[n+1][r]
 
-#Restrição 6
+#Restrição 6(_C73 a _C90)
 
 for r in range(nRota):
     for p in range(nProduto):
-        print(pesoP[p]*lpSum(qVar[p][r][t] for t in range(nMes)) <= list(tetaV[v]*aVar[r][v]  for v in range(nVeiculo)))
+        # print(pesoP[p]*lpSum(qVar[p][r][t] for t in range(nMes)) <= list(capacidadeV[v]*aVar[r][v]  for v in range(nVeiculo)))
+        modelo+=pesoP[p]*lpSum(qVar[p][r][t] for t in range(nMes)) <= list(capacidadeV[v]*aVar[r][v]  for v in range(nVeiculo))
 
+#Restrição 7
+# for r in range(nRota):
+    # print(lpSum(aVar[r][v]for v in range(nVeiculo)) == lpSum(sVar[0][r][t] for t in range(nMes)))

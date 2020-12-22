@@ -39,11 +39,8 @@ custoArmazenamento = np.array([1,2,3]).reshape(-1,1)
 tempoProcessamento = np.array([1,1,1])
 
     #nCauda do artigo
-proporcaoComponenteProduto = np.array([
-    [1,np.inf,np.inf],
-    [np.inf,1,np.inf],
-    [np.inf,np.inf,1]
-])
+    #Aqui optou-se por restringir cada componente para um produto especifico e olhar únicamente para o produto
+proporcaoComponenteProduto = np.array([1,2,3])
     #Imin do artigo
 estoqueMin = np.array([1,1,1])
 
@@ -117,4 +114,31 @@ print("A: ",aVar)
 objFunc = lpSum(custoArmazenamento*iVar)+lpSum(tempoSetup*zVar)+lpSum(custoTransporte*wVar)
 # print(objFunc)
 modelo+=objFunc
+# print(modelo)
+#Restrições
+
+#Restrição 2 (_C1 até _C9)
+for a in range(nComponente):
+    for t in range(nMes):
+        #Aqui optou-se por restringir cada componente para um produto especifico e olhar únicamente para o produto
+        # print(iVar[a][t]+xVar[a][t] == lpSum(proporcaoComponenteProduto[p] * qVar[p][r][t] for p in range(nProduto) for r in range(nRota)))
+        if(t==0):
+            # print(200+xVar[a][t] == lpSum(proporcaoComponenteProduto[p] * qVar[p][r][t] for p in range(nProduto) for r in range(nRota))+iVar[a][t])
+            modelo+=200+xVar[a][t] == lpSum(proporcaoComponenteProduto[p] * qVar[p][r][t] for p in range(nProduto) for r in range(nRota))+iVar[a][t]
+        else:
+            # print(iVar[a][t-1]+xVar[a][t] == lpSum(proporcaoComponenteProduto[p] * qVar[p][r][t] for p in range(nProduto) for r in range(nRota))+iVar[a][t])
+            modelo+=iVar[a][t-1]+xVar[a][t] == lpSum(proporcaoComponenteProduto[p] * qVar[p][r][t] for p in range(nProduto) for r in range(nRota))+iVar[a][t]
+
+#Restricao 3(_C10 até _C18)
+for a in range(nComponente):
+    for t in range(nMes):
+        #Aqui optou-se por restringir cada componente para um produto especifico e olhar únicamente para o produto
+        # print(iVar[a][t]+xVar[a][t] == lpSum(proporcaoComponenteProduto[p] * qVar[p][r][t] for p in range(nProduto) for r in range(nRota)))
+        if(t==0):
+            # print(200+xVar[a][t] == lpSum(proporcaoComponenteProduto[p] * qVar[p][r][t] for p in range(nProduto) for r in range(nRota))+iVar[a][t])
+            modelo+=200 >= lpSum(proporcaoComponenteProduto[p] * qVar[p][r][t] for p in range(nProduto) for r in range(nRota))
+        else:
+            # print(iVar[a][t-1]+xVar[a][t] == lpSum(proporcaoComponenteProduto[p] * qVar[p][r][t] for p in range(nProduto) for r in range(nRota))+iVar[a][t])
+            modelo+=iVar[a][t-1] >= lpSum(proporcaoComponenteProduto[p] * qVar[p][r][t] for p in range(nProduto) for r in range(nRota))
 print(modelo)
+
